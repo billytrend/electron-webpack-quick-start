@@ -1,0 +1,37 @@
+steps:
+  # set the version of node to use to build the app
+  - task: NodeTool@0
+    inputs:
+      versionSpec: "8.x"
+
+  # run `npm install`
+  - task: Npm@1
+    displayName: npm install
+    inputs:
+      verbose: false
+
+  # run `npm run dist`
+  - task: Npm@1
+    displayName: npm run dist
+    inputs:
+      command: custom
+      verbose: false
+      customCommand: "run dist"
+
+  # copy relevant build files to a directory provided by vsts
+  - task: CopyFiles@2
+    displayName: "Copy Files to: $(Build.ArtifactStagingDirectory)"
+    inputs:
+      SourceFolder: dist
+      Contents: |
+        *.json
+        *.yml
+        *.zip
+      TargetFolder: $(Build.ArtifactStagingDirectory)
+
+  # publish build files, allowing them to be downloaded from vsts or picked up by a release task
+  - task: PublishBuildArtifacts@1
+    displayName: "Publish Artifact: dist"
+    inputs:
+      PathtoPublish: $(Build.ArtifactStagingDirectory)
+      ArtifactName: dist
