@@ -12,11 +12,11 @@ steps:
 
   # run `npm run dist`
   - task: Npm@1
-    displayName: npm run dist
+    displayName: npm run publish
     inputs:
       command: custom
       verbose: false
-      customCommand: "run dist"
+      customCommand: "run publish"
 
   # copy relevant build files to a directory provided by vsts
   - task: CopyFiles@2
